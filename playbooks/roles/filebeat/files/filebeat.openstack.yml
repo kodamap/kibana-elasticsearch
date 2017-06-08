@@ -1,0 +1,39 @@
+filebeat.modules:
+- module: system
+  syslog:
+    enabled: true
+- module: apache2
+  access:
+    enabled: true
+    var.paths: ["/var/log/httpd/*_access.log"]
+  error:
+    enabled: true
+    var.paths: ["/var/log/httpd/*_error.log"]
+- module: auditd
+  log:
+    enabled: true
+- module: mysql
+  error:
+    enabled: true
+    var.paths: ["/var/log/mariadb/mariadb.log"]
+filebeat.prospectors:
+- input_type: log
+  paths:
+    - /var/log/neutron/*.log
+    - /var/log/nova/*.log
+    - /var/log/cinder/*.log
+    - /var/log/swift/*.log
+    - /var/log/glance/*.log
+    - /var/log/heat/*.log
+    - /var/log/httpd/*.log
+    - /var/log/horizon/*.log
+    - /var/log/keystone/*.log
+    - /var/log/mariadb/*.log
+    - /var/log/messages
+    - /var/log/mongodb/*.log
+    - /var/log/openvswitch/*.log
+    - /var/log/ceilometer/*.log
+    - /var/log/rabbitmq/*.log
+    - /var/log/libvirt/*.log
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]

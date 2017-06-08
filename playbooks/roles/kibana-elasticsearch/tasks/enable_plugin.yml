@@ -1,0 +1,25 @@
+---
+
+- name: install plugin to elasticsearch
+  command: bin/elasticsearch-plugin install ingest-geoip
+  args:
+    chdir: /usr/share/elasticsearch/
+
+- name: install plugin to elasticsearch
+  command: bin/elasticsearch-plugin install ingest-user-agent
+  args:
+    chdir: /usr/share/elasticsearch/
+
+- name: enable elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    masked: no
+    state: restarted
+
+- name: enable kibana
+  service:
+    name: kibana
+    enabled: yes
+    masked: no
+    state: restarted

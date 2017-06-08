@@ -1,0 +1,5 @@
+---
+
+- include: configure.yml
+- include: enable_plugin.yml
+- include: firewall.yml

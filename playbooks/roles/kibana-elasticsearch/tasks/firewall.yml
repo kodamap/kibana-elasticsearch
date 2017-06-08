@@ -1,0 +1,29 @@
+---
+
+- name: disable firewalld
+  systemd:
+    name: firewalld
+    enabled: no
+    masked: yes
+    state: stopped
+
+- name: install needed packages
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - iptables-services
+
+- name: start iptables.service
+  service:
+    name: iptables
+    enabled: yes
+    masked: no
+    state: started
+
+# need ansible_iptables_raw
+# https://github.com/Nordeus/ansible_iptables_raw
+- iptables_raw:
+    name: iptables rule for kibana and elasticsearch 
+    rules: '-A INPUT -p tcp -m multiport --dports 9200,5601 -m comment --comment "incoming elasticsearch and kibana from anywhere" -j ACCEPT'
+    backup: yes

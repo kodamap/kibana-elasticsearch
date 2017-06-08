@@ -1,0 +1,16 @@
+---
+
+- name: install filebeat
+  yum: 
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.4.0-x86_64.rpm
+    state: present
+
+- name: copy filebeat yaml
+  copy: src=filebeat.yml dest=/etc/filebeat owner=root group=root mode=0644 backup=yes
+
+- name: start filebeat
+  service:
+    name: filebeat
+    enabled: yes
+    masked: no
+    state: started

@@ -1,0 +1,112 @@
+---
+
+- name: set timezone to Asia/Tokyo
+  timezone:
+    name: Asia/Tokyo
+
+- name: yum update
+  yum: state=latest name=*
+  
+- name: install needed packages
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - java
+    - net-tools
+    - telnet
+    - tmux
+    - tcpdump
+    - libpcap
+
+- name: import repository
+  rpm_key:
+    state: present
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: copy elasticsearch repo
+  copy: src=elasticsearch.repo dest=/etc/yum.repos.d owner=root group=root mode=0644 backup=no
+
+- name: copy kibana repo
+  copy: src=kibana.repo dest=/etc/yum.repos.d owner=root group=root mode=0644 backup=no
+
+- name: install elasticsearch and kibana
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - elasticsearch
+    - kibana
+
+- name: install filebeat (to get template file)
+  yum: 
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.4.0-x86_64.rpm
+    state: present
+
+- name: install packetbeat (to get template file)
+  yum: 
+    name: https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-5.4.0-x86_64.rpm
+    state: present
+    
+- name: copy elasticsearch yaml
+  copy: src=elasticsearch.yml dest=/etc/elasticsearch owner=root group=elasticsearch mode=0666 backup=yes
+
+- name: copy kibana yaml
+  copy: src=kibana.yml dest=/etc/kibana owner=root group=kibana mode=0666 backup=yes
+
+- name: copy filebeat yaml
+  copy: src=filebeat.yml dest=/etc/filebeat owner=root group=root mode=0644 backup=yes
+
+- name: copy packetbeat yaml
+  copy: src=packetbeat.yml dest=/etc/packetbeat owner=root group=root mode=0644 backup=yes
+
+- name: set vm.max_map_count 262144
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+
+- name: enable elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    masked: no
+    state: started
+
+- name: enable kibana
+  service:
+    name: kibana
+    enabled: yes
+    masked: no
+    state: started
+
+- name: create index filebeat template
+  uri:
+    url: http://localhost:9200/_template/filebeat 
+    method: POST
+    body: "{{ lookup('file','/etc/filebeat/filebeat.template.json') }}"
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+
+- name: create index filebeat packetbeat
+  uri:
+    url: http://localhost:9200/_template/packetbeat
+    method: POST
+    body: "{{ lookup('file','/etc/packetbeat/packetbeat.template.json') }}"
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+
+- name: create filebeat dashboard 
+  command: ./scripts/import_dashboards
+  # command ./scripts/import_dashboards -es http://192.168.33.60:9200
+  args:
+    chdir: /usr/share/filebeat/
+
+- name: create packetbeat dashboard 
+  command: ./scripts/import_dashboards
+  # command ./scripts/import_dashboards -es http://192.168.33.60:9200
+  args:
+    chdir: /usr/share/packetbeat/
+

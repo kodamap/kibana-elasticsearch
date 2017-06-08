@@ -1,0 +1,19 @@
+---
+
+- name: install kibana-elasticsearch
+  hosts: kibana-elasticsearch
+  gather_facts: no
+  become: yes
+  
+  roles:
+   - kibana-elasticsearch
+
+- name: install beats
+  hosts: client
+  gather_facts: no
+  become: yes
+  
+  roles:
+   - filebeat
+   - packetbeat
+   

@@ -1,0 +1,16 @@
+---
+
+- name: install metricbeat
+  yum: 
+    name: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-5.4.1-x86_64.rpm
+    state: present
+
+- name: copy metricbeat yaml
+  copy: src=metricbeat.yml dest=/etc/metricbeat owner=root group=root mode=0644 backup=yes
+
+- name: start metricbeat
+  service:
+    name: metricbeat
+    enabled: yes
+    masked: no
+    state: restarted
