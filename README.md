@@ -10,7 +10,28 @@ http://docs.ansible.com/ansible/intro_installation.html#latest-releases-via-pip
 
 ```
 git clone https://github.com/kodamap/kibana-elasticsearch
-cd kibana-elasticsearch
+```
+
+- install iptables_raw module (optional)
+
+To modify iptables rule , install iptables_raw from https://github.com/Nordeus/ansible_iptables_raw
+
+```
+cd kibana-elasticsearch/playbooks
+git clone https://github.com/Nordeus/ansible_iptables_raw
+mkdir library
+cp ansible_iptables_raw/iptables_raw.py ./library/
+```
+
+or disable firewalld and comment out firewall task
+
+```
+vi roles/kibana-elasticsearch/tasks/main.yml
+---
+
+- include: configure.yml
+- include: enable_plugin.yml
+# - include: firewall.yml
 ```
 
 - configure ansible_host

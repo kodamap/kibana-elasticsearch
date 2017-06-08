@@ -84,7 +84,7 @@
   uri:
     url: http://localhost:9200/_template/filebeat 
     method: POST
-    body: "{{ lookup('file','/etc/filebeat/filebeat.template.json') }}"
+    body: "{{ lookup('file','filebeat.template.json') }}"
     body_format: json
     headers:
       Content-Type: "application/json"
@@ -93,7 +93,7 @@
   uri:
     url: http://localhost:9200/_template/packetbeat
     method: POST
-    body: "{{ lookup('file','/etc/packetbeat/packetbeat.template.json') }}"
+    body: "{{ lookup('file','packetbeat.template.json') }}"
     body_format: json
     headers:
       Content-Type: "application/json"
