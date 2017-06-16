@@ -11,6 +11,9 @@ COPY kibana.repo /etc/yum.repos.d/
 RUN yum install kibana -y
 RUN yum install -y initscripts
 
+# install plugin
+RUN /usr/share/kibana/bin/kibana-plugin install x-pack
+
 COPY kibana.yml /etc/kibana/
 
 COPY run.sh /

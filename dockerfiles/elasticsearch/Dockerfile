@@ -14,6 +14,7 @@ RUN yum install -y initscripts
 # install plugin
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-geoip --batch
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-user-agent --batch
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install x-pack --batch
 COPY elasticsearch.yml /etc/elasticsearch/
 COPY filebeat.template.json /
 
