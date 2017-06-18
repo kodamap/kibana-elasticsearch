@@ -12,7 +12,7 @@ RUN yum install kibana -y
 RUN yum install -y initscripts
 
 # install plugin
-RUN /usr/share/kibana/bin/kibana-plugin install x-pack
+## RUN /usr/share/kibana/bin/kibana-plugin install x-pack
 
 COPY kibana.yml /etc/kibana/
 
