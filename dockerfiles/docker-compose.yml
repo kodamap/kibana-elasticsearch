@@ -1,0 +1,24 @@
+version: "3"
+services:
+  elasticsearch:
+    image: localhost/elasticsearch:v1
+    build: .
+    container_name: elasticsearch
+    volumes:
+      - "/var/data/elasticsearch:/var/lib/elasticsearch"
+    ports:
+      - "9200:9200"
+  kibana:
+    image: localhost/kibana:v3
+    build: .
+    container_name: kibana
+    volumes:
+      - "/var/data/kibana:/var/lib/kibana"
+    ports:
+      - "5601:5601"
+  nginx:
+    image: localhost/nginx:v2
+    build: .
+    container_name: nginx
+    ports:
+      - "5681:5681"

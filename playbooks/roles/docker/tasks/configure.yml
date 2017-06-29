@@ -1,0 +1,69 @@
+---
+
+- name: set timezone to Asia/Tokyo
+  timezone:
+    name: Asia/Tokyo
+
+- name: install needed packages
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - yum-utils
+    - git
+    - device-mapper-persistent-data
+    - lvm2
+    - net-tools
+    - telnet
+    - tmux
+    - tcpdump
+    - libpcap
+
+#- name: Add repository
+#  yum_repository:
+#    name: docker-ce
+#    description: docker ce repo
+#    baseurl: https://download.docker.com/linux/centos/docker-ce.repo/
+#    enabled: yes
+
+- name: Add docker-ce repo
+  command: > 
+   yum-config-manager 
+     --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: yum update
+  yum: state=latest name=*
+
+- name: yum makecache fast  
+  command: yum makecache fast
+
+- name: yum update
+  yum: state=latest name=*
+
+- name: install docker-ce
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - docker-ce
+
+- name: enable docker
+  service:
+    name: docker
+    enabled: yes
+    masked: no
+    state: started
+
+- name: docker info
+  shell: docker info
+  register: result
+  ignore_errors: True
+
+- debug: var=result.stdout_lines
+  when: result | success
+
+- name: set vm.max_map_count 262144
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present

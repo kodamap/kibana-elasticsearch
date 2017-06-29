@@ -57,8 +57,8 @@ ansible-playbook -i ansible_host kibana-elasticsearch.yml --private-key=~/privat
 - create data directories
 
 ```
-sudo mkdir -p /var/data/elasticsearch; chmod 777 /var/data/elasticsearch
-sudo mkdir -p /var/data/kibana; chmod 777 /var/data/kibana
+sudo mkdir -p /var/data/elasticsearch; sudo chmod 777 /var/data/elasticsearch
+sudo mkdir -p /var/data/kibana; sudo chmod 777 /var/data/kibana
 ```
 
 - build and run
@@ -71,6 +71,19 @@ sudo docker run -v /var/data/elasticsearch:/var/lib/elasticsearch -p 9200:9200 -
 sudo docker run -v /var/data/kibana:/var/lib/kibana -p 5601:5601 -itd --name kibana --link elasticsearch:EL localhost/kibana:v1
 ```
 
+
+## nginx (optional)
+
+If you need to proxy access and authentication is required for kibana, you may build nginx (reverse proxy ). 
+
+- nginx use 5681/tcp port. 
+- basic auth id / pass :  elastic/changeme
+
+
+```
+sudo docker build -t localhost/nginx:v1 dockerfiles/nginx/
+sudo docker run -p 5681:5681 -itd --name nginx --link kibana:KIBANA localhost/nginx:v1
+```
 
 
 ## Reference

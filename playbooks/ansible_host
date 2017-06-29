@@ -3,3 +3,6 @@ x.x.x.x
 
 [client]
 x.x.x.x
+
+[docker-host]
+x.x.x.x
