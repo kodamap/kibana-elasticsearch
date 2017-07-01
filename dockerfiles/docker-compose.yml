@@ -9,16 +9,20 @@ services:
     ports:
       - "9200:9200"
   kibana:
-    image: localhost/kibana:v3
+    image: localhost/kibana:v1
     build: ./kibana
     container_name: kibana
+    links:
+      - elasticsearch
     volumes:
       - "/var/data/kibana:/var/lib/kibana"
     ports:
       - "5601:5601"
   nginx:
-    image: localhost/nginx:v2
+    image: localhost/nginx:v1
     build: ./nginx
     container_name: nginx
+    links:
+      - kibana
     ports:
       - "5681:5681"
