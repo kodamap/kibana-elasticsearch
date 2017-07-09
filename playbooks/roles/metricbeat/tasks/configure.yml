@@ -2,7 +2,7 @@
 
 - name: install metricbeat
   yum: 
-    name: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-5.4.1-x86_64.rpm
+    name: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-5.4.2-x86_64.rpm
     state: present
 
 - name: copy metricbeat yaml

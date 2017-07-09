@@ -67,3 +67,13 @@
     name: vm.max_map_count
     value: 262144
     state: present
+
+- name: install filebeat only install
+  yum: 
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.4.2-x86_64.rpm
+    state: present
+    
+- name: install packetbeat only install
+  yum:
+    name: https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-5.4.2-x86_64.rpm
+    state: present
