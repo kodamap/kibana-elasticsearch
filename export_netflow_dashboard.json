@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "d05ec600-472a-11e7-b6ae-d9ccb886b755",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Netflow Dashboard",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"a2dadb60-472a-11e7-b6ae-d9ccb886b755\",\"panelIndex\":1,\"row\":8,\"size_x\":12,\"size_y\":5,\"type\":\"visualization\"},{\"col\":11,\"id\":\"1dc0a620-472b-11e7-b6ae-d9ccb886b755\",\"panelIndex\":2,\"row\":1,\"size_x\":2,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"896a7270-472b-11e7-b6ae-d9ccb886b755\",\"panelIndex\":3,\"row\":1,\"size_x\":10,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"7a3c1320-472c-11e7-b6ae-d9ccb886b755\",\"panelIndex\":4,\"row\":5,\"size_x\":6,\"size_y\":3,\"type\":\"visualization\"},{\"col\":11,\"id\":\"48f97d60-472d-11e7-b6ae-d9ccb886b755\",\"panelIndex\":5,\"row\":3,\"size_x\":2,\"size_y\":2,\"type\":\"visualization\"},{\"col\":7,\"id\":\"143a51c0-4733-11e7-b6ae-d9ccb886b755\",\"panelIndex\":6,\"row\":5,\"size_x\":6,\"size_y\":3,\"type\":\"visualization\"}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-3\":{\"mapCenter\":[37.78808138412046,55.107421875],\"mapZoom\":3}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  }
+]
