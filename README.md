@@ -22,7 +22,7 @@ git clone https://github.com/kodamap/kibana-elasticsearch
 
 ## deploy elk
 
-- modify ansible_host
+* modify ansible_host
 
 ```sh
 cd kibana-elasticsearch/playbooks/
@@ -32,20 +32,19 @@ vi ansible_host
 127.0.0.1
 ```
 
-- install and setup docker host
+* install and setup docker host
 
 ```sh
 ansible-playbook -i ansible_host docker.yml --key-file=~/your_private-key.pem -u centos
 ```
 
-if you want to connect via ssh with password
+* to connect to a server with password
 
 ```sh
-ansible-playbook -i ansible_host docker.yml --key-file=~/kodama-key.pem -k -u centos -c paramiko
+ansible-playbook -i ansible_host docker.yml -k -u centos -c paramiko
 ```
 
-
-- build and run
+* build and run
 
 ```
 cd ~/kibana-elasticsearch/dockerfiles/
@@ -64,27 +63,27 @@ logstash        /run.sh   Up      2055/tcp, 0.0.0.0:2055->2055/udp
 nginx           /run.sh   Up      0.0.0.0:5681->5681/tcp
 ```
 
-- your will see kibana dashboard 
+* You will see kibana dashboard  
 
 URL : http://{your ip address}:5601/
 
 
 ## Reference
 
-- elasticsearch
+* elasticsearch
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html
 https://www.elastic.co/guide/en/elasticsearch/reference/current/rpm.html
 
-- plugin
+* plugin
 
 https://www.elastic.co/guide/en/beats/filebeat/current/_tutorial.html
 
-- kibana
+* kibana
 
 https://www.elastic.co/guide/en/kibana/current/rpm.html
 
-- beats 
+* beats 
 
 https://www.elastic.co/guide/en/beats/libbeat/current/installing-beats.html
 
