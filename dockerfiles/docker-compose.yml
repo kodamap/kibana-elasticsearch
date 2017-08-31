@@ -1,8 +1,7 @@
 version: "3"
 services:
   elasticsearch:
-    image: localhost/elasticsearch:v1
-    build: ./elasticsearch
+    image: kodamap/kibana-elasticsearch:el-5.5.2
     container_name: elasticsearch
     volumes:
       - "/var/data/elasticsearch:/var/lib/elasticsearch"
@@ -15,8 +14,7 @@ services:
         max-file: "10"
     restart: unless-stopped
   kibana:
-    image: localhost/kibana:v1
-    build: ./kibana
+    image: kodamap/kibana-elasticsearch:kibana-5.5.2
     container_name: kibana
     links:
       - elasticsearch
@@ -31,8 +29,7 @@ services:
         max-file: "10"
     restart: unless-stopped
   logstash:
-    image: localhost/logstash:v1
-    build: ./logstash
+    image: kodamap/kibana-elasticsearch:logstash-5.5.2
     container_name: logstash
     links:
       - elasticsearch
@@ -47,8 +44,7 @@ services:
         max-file: "10"
     restart: unless-stopped
   nginx:
-    image: localhost/nginx:v1
-    build: ./nginx
+    image: kodamap/kibana-elasticsearch:nginx-latest
     container_name: nginx
     links:
       - kibana

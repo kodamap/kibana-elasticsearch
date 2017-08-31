@@ -1,107 +1,67 @@
 # kibana-elasticsearch deploy on centos7
 
-## docker
+## components
 
-### elasticsearch + kibana
+components | description
+----- | -----
+elasticsearch | search engine
+kibana | dashboard
+logstash | netflow collector
+nginx (optional) | reverse proxy (restricting access with HTTP Basic Authentication on kibana) * id/pass: elastic/changeme
 
-- create data directories
+## install ansible
 
-```
-sudo mkdir -p /var/data/elasticsearch; sudo chmod 777 /var/data/elasticsearch
-sudo mkdir -p /var/data/kibana; sudo chmod 777 /var/data/kibana
-```
-
-- build and run
-
-```
-cd dockerfiles
-sudo docker build -t localhost/elasticsearch:v1 elasticsearch/
-sudo docker build -t localhost/kibana:v1 kibana/
-sudo docker run -v /var/data/elasticsearch:/var/lib/elasticsearch -p 9200:9200 -itd --name elasticsearch localhost/elasticsearch:v1
-sudo docker run -v /var/data/kibana:/var/lib/kibana -p 5601:5601 -itd --name kibana --link elasticsearch localhost/kibana:v1
-```
-
-### logstash (netflow collector)
-
-This is an optional deployment.
-
-- create data directories
-
-```
-sudo mkdir -p /var/data/logstash; sudo chmod 777 /var/data/logstash
-```
-
-- build and run
-
-```
-cd dockerfiles
-sudo docker build -t localhost/logstash:v1 logstash/
-sudo docker run -v /var/data/logstash:/var/lib/logstash -p 2055:2055/udp -itd --name logstash localhost/logstash:v1
-```
-
-### nginx (optional)
-
-This is an optional deployment.
-If you need to set up restricting access with HTTP Basic Authentication on kibana, you can build nginx (reverse proxy ). 
-
-- using 5681/tcp port. 
-- basic auth id / pass :  elastic/changeme
-
-
-```
-sudo docker build -t localhost/nginx:v1 dockerfiles/nginx/
-sudo docker run -p 5681:5681 -itd --name nginx --link kibana localhost/nginx:v1
-```
-
-## ansible
-
-- install ansible
-
-http://docs.ansible.com/ansible/intro_installation.html#latest-releases-via-pip
-
-- git clone
-
-```
+```sh
+sudo  yum install epel-release
+sudo yum -y install python-pip
+sudo pip install --upgrade pip
+sudo yum install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config
+sudo pip install paramiko
+sudo pip install ansible
+sudo yum -y install git
 git clone https://github.com/kodamap/kibana-elasticsearch
 ```
 
-- install iptables_raw module (optional)
+## deploy elk
 
-To modify iptables rule , install iptables_raw from https://github.com/Nordeus/ansible_iptables_raw
+- modify ansible_host
 
-```
-cd kibana-elasticsearch/playbooks
-git clone https://github.com/Nordeus/ansible_iptables_raw
-mkdir library
-cp ansible_iptables_raw/iptables_raw.py ./library/
-```
+```sh
+cd kibana-elasticsearch/playbooks/
 
-or disable firewalld and comment out firewall task
-
-```
-vi roles/kibana-elasticsearch/tasks/main.yml
----
-
-- include: configure.yml
-- include: enable_plugin.yml
-# - include: firewall.yml
+vi ansible_host
+[docker-host]
+127.0.0.1
 ```
 
-- configure ansible_host
+- install and setup docker host
+
+```sh
+ansible-playbook -i ansible_host docker.yml --key-file=~/your_private-key.pem -u centos
+```
+
+- build and run
 
 ```
-[kibana-elasticsearch]
-x.x.x.x
-
-[client]
-x.x.x.x
-````
-
-- install elasticsearch + kibana on the same node and beats to the clients.
-
+cd ~/kibana-elasticsearch/dockerfiles/
+sudo docker-compose up -d
 ```
-ansible-playbook -i ansible_host kibana-elasticsearch.yml --private-key=~/private-key.pem -u centos
+
+## check deployment
+
+```sh
+sudo docker-compose ps
+    Name        Command   State                Ports
+------------------------------------------------------------------
+elasticsearch   /run.sh   Up      0.0.0.0:9200->9200/tcp
+kibana          /run.sh   Up      0.0.0.0:5601->5601/tcp
+logstash        /run.sh   Up      2055/tcp, 0.0.0.0:2055->2055/udp
+nginx           /run.sh   Up      0.0.0.0:5681->5681/tcp
 ```
+
+- your will see kibana dashboard 
+
+URL : http://{your ip address}:5601/
 
 
 ## Reference
@@ -119,13 +79,10 @@ https://www.elastic.co/guide/en/beats/filebeat/current/_tutorial.html
 
 https://www.elastic.co/guide/en/kibana/current/rpm.html
 
-- filebeat
+- beats 
 
-https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
+https://www.elastic.co/guide/en/beats/libbeat/current/installing-beats.html
 
-- packetbeat
-
-https://www.elastic.co/guide/en/beats/packetbeat/current/packetbeat-installation.html
 
 
 
