@@ -12,13 +12,11 @@ nginx (optional) | reverse proxy (restricting access with HTTP Basic Authenticat
 ## install ansible
 
 ```sh
-sudo  yum install epel-release
-sudo yum -y install python-pip
+sudo yum -y install epel-release
+sudo yum -y install python-devel libffi-devel openssl-devel gcc git python-pip redhat-rpm-config
 sudo pip install --upgrade pip
-sudo yum install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config
 sudo pip install paramiko
 sudo pip install ansible
-sudo yum -y install git
 git clone https://github.com/kodamap/kibana-elasticsearch
 ```
 
@@ -39,6 +37,13 @@ vi ansible_host
 ```sh
 ansible-playbook -i ansible_host docker.yml --key-file=~/your_private-key.pem -u centos
 ```
+
+if you want to connect via ssh with password
+
+```sh
+ansible-playbook -i ansible_host docker.yml --key-file=~/kodama-key.pem -k -u centos -c paramiko
+```
+
 
 - build and run
 
