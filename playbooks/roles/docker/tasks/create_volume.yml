@@ -1,0 +1,11 @@
+---
+
+- name: create volumes
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0777
+  with_items:
+    - /var/data/elasticsearch
+    - /var/data/kibana
+    - /var/data/logstash

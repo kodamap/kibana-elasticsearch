@@ -19,26 +19,19 @@
     - tcpdump
     - libpcap
 
-#- name: Add repository
-#  yum_repository:
-#    name: docker-ce
-#    description: docker ce repo
-#    baseurl: https://download.docker.com/linux/centos/docker-ce.repo/
-#    enabled: yes
-
-- name: Add docker-ce repo
-  command: > 
-   yum-config-manager 
+- name: add docker-ce repo
+  command: >
+   yum-config-manager
      --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 - name: yum update
-  yum: state=latest name=*
+  yum:
+    state: latest
+    name: '*'
+    disable_gpg_check: true
 
-- name: yum makecache fast  
+- name: yum makecache fast
   command: yum makecache fast
-
-- name: yum update
-  yum: state=latest name=*
 
 - name: install docker-ce
   yum:
@@ -68,12 +61,31 @@
     value: 262144
     state: present
 
-- name: install filebeat only install
-  yum: 
-    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.4.2-x86_64.rpm
-    state: present
-    
-- name: install packetbeat only install
+- name: add repository
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+
+- name: install pip
   yum:
-    name: https://artifacts.elastic.co/downloads/beats/packetbeat/packetbeat-5.4.2-x86_64.rpm
+    name: '{{ item }}'
     state: present
+    disable_gpg_check: true
+  with_items:
+    - python-pip
+
+- name: yum update
+  yum:
+    state: latest
+    name: '*'
+    disable_gpg_check: true
+
+- name: upgrade pip
+  pip:
+    name: pip
+    extra_args: --upgrade
+
+- name: install docker-compose
+  pip:
+    name: docker-compose

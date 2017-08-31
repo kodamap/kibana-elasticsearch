@@ -1,4 +1,57 @@
-# kibana-elasticsearch deploy on centos
+# kibana-elasticsearch deploy on centos7
+
+## docker
+
+### elasticsearch + kibana
+
+- create data directories
+
+```
+sudo mkdir -p /var/data/elasticsearch; sudo chmod 777 /var/data/elasticsearch
+sudo mkdir -p /var/data/kibana; sudo chmod 777 /var/data/kibana
+```
+
+- build and run
+
+```
+cd dockerfiles
+sudo docker build -t localhost/elasticsearch:v1 elasticsearch/
+sudo docker build -t localhost/kibana:v1 kibana/
+sudo docker run -v /var/data/elasticsearch:/var/lib/elasticsearch -p 9200:9200 -itd --name elasticsearch localhost/elasticsearch:v1
+sudo docker run -v /var/data/kibana:/var/lib/kibana -p 5601:5601 -itd --name kibana --link elasticsearch localhost/kibana:v1
+```
+
+### logstash (netflow collector)
+
+This is an optional deployment.
+
+- create data directories
+
+```
+sudo mkdir -p /var/data/logstash; sudo chmod 777 /var/data/logstash
+```
+
+- build and run
+
+```
+cd dockerfiles
+sudo docker build -t localhost/logstash:v1 logstash/
+sudo docker run -v /var/data/logstash:/var/lib/logstash -p 2055:2055/udp -itd --name logstash localhost/logstash:v1
+```
+
+### nginx (optional)
+
+This is an optional deployment.
+If you need to set up restricting access with HTTP Basic Authentication on kibana, you can build nginx (reverse proxy ). 
+
+- using 5681/tcp port. 
+- basic auth id / pass :  elastic/changeme
+
+
+```
+sudo docker build -t localhost/nginx:v1 dockerfiles/nginx/
+sudo docker run -p 5681:5681 -itd --name nginx --link kibana localhost/nginx:v1
+```
 
 ## ansible
 
@@ -48,41 +101,6 @@ x.x.x.x
 
 ```
 ansible-playbook -i ansible_host kibana-elasticsearch.yml --private-key=~/private-key.pem -u centos
-```
-
-## docker
-
-### elasticsearch + kibana
-
-- create data directories
-
-```
-sudo mkdir -p /var/data/elasticsearch; sudo chmod 777 /var/data/elasticsearch
-sudo mkdir -p /var/data/kibana; sudo chmod 777 /var/data/kibana
-```
-
-- build and run
-
-```
-cd dockerfiles
-sudo docker build -t localhost/elasticsearch:v1 elasticsearch/
-sudo docker build -t localhost/kibana:v1 kibana/
-sudo docker run -v /var/data/elasticsearch:/var/lib/elasticsearch -p 9200:9200 -itd --name elasticsearch localhost/elasticsearch:v1
-sudo docker run -v /var/data/kibana:/var/lib/kibana -p 5601:5601 -itd --name kibana --link elasticsearch:EL localhost/kibana:v1
-```
-
-
-## nginx (optional)
-
-If you need to proxy access and authentication is required for kibana, you may build nginx (reverse proxy ). 
-
-- nginx use 5681/tcp port. 
-- basic auth id / pass :  elastic/changeme
-
-
-```
-sudo docker build -t localhost/nginx:v1 dockerfiles/nginx/
-sudo docker run -p 5681:5681 -itd --name nginx --link kibana:KIBANA localhost/nginx:v1
 ```
 
 

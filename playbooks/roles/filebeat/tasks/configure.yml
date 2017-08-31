@@ -2,7 +2,7 @@
 
 - name: install filebeat
   yum: 
-    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.4.2-x86_64.rpm
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.5.2-x86_64.rpm
     state: present
 
 - name: copy filebeat yaml

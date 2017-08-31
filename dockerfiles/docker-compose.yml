@@ -8,6 +8,11 @@ services:
       - "/var/data/elasticsearch:/var/lib/elasticsearch"
     ports:
       - "9200:9200"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10240k"
+        max-file: "10"
     restart: unless-stopped
   kibana:
     image: localhost/kibana:v1
@@ -19,6 +24,11 @@ services:
       - "/var/data/kibana:/var/lib/kibana"
     ports:
       - "5601:5601"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10240k"
+        max-file: "10"
     restart: unless-stopped
   logstash:
     image: localhost/logstash:v1
@@ -30,13 +40,23 @@ services:
       - "/var/data/logstash:/var/lib/logstash"
     ports:
       - "2055:2055/udp"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10240k"
+        max-file: "10"
     restart: unless-stopped
   nginx:
-    image: localhost/nginx:v2
+    image: localhost/nginx:v1
     build: ./nginx
     container_name: nginx
     links:
       - kibana
     ports:
       - "5681:5681"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10240k"
+        max-file: "10"
     restart: unless-stopped
