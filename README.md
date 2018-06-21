@@ -46,7 +46,15 @@ ansible-playbook -i ansible_host docker.yml -k -u centos -c paramiko
 
 * build and run
 
-```
+```sh
+mkdir -p /var/data/elasticsearch/data
+mkdir -p /var/data/elasticsearch/logs
+mkdir -p /var/data/logstash
+mkdir -p /var/data/kibana
+chmod 777 -R /var/data/elasticsearch
+chmod 777 -R /var/data/logstash
+chmod 777 -R /var/data/kibana
+
 cd ~/kibana-elasticsearch/dockerfiles/
 sudo docker-compose up -d
 ```
