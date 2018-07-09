@@ -10,11 +10,7 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 COPY logstash.repo /etc/yum.repos.d/
 RUN yum install logstash -y
 
-COPY netflow.conf /etc/logstash/conf.d/
-
-RUN curl -O http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
-RUN tar zxf GeoLite2-City.tar.gz
-RUN cp -p GeoLite2-City_*/GeoLite2-City.mmdb /etc/logstash/
+COPY logstash.yml /etc/logstash/logstash.yml
 
 COPY run.sh /
 RUN chmod 755 /run.sh

@@ -1,0 +1,7 @@
+path.data: /var/lib/logstash
+path.logs: /var/log/logstash
+modules:
+  - name: netflow
+    var.input.udp.port: 2055
+    var.elasticsearch.hosts: "elasticsearch:9200"
+    var.kibana.host: "kibana:5601"

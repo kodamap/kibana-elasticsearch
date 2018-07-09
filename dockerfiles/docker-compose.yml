@@ -2,7 +2,7 @@ version: "3"
 services:
   elasticsearch:
     build: ./elasticsearch
-    #image: kodamap/kibana-elasticsearch:el-6.3
+    #image: kodamap/kibana-elasticsearch:el-6.3.1
     container_name: elasticsearch
     volumes:
       - "/var/data/elasticsearch:/var/lib/elasticsearch"
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
   kibana:
     build: ./kibana
-    #image: kodamap/kibana-elasticsearch:kibana-6.3
+    #image: kodamap/kibana-elasticsearch:kibana-6.3.1
     container_name: kibana
     links:
       - elasticsearch
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
   logstash:
     build: ./logstash
-    #image: kodamap/kibana-elasticsearch:logstash-6.3
+    #image: kodamap/kibana-elasticsearch:logstash-6.3.1
     container_name: logstash
     links:
       - elasticsearch
