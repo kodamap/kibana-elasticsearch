@@ -1,2 +1,4 @@
 network.host: 0.0.0.0
-thread_pool.bulk.queue_size: 1000
+discovery.seed_hosts: elasticsearch
+cluster.initial_master_nodes: elasticsearch
+xpack.ml.enabled: false

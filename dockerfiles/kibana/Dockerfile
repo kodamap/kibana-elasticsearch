@@ -10,11 +10,6 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 COPY kibana.repo /etc/yum.repos.d/
 RUN yum install kibana -y
 
-# install plugin
-## RUN /usr/share/kibana/bin/kibana-plugin install x-pack
-
-COPY kibana.yml /etc/kibana/
-
 COPY run.sh /
 RUN chmod 755 /run.sh
 CMD ["/run.sh"]

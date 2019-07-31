@@ -10,8 +10,6 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 COPY logstash.repo /etc/yum.repos.d/
 RUN yum install logstash -y
 
-COPY logstash.yml /etc/logstash/logstash.yml
-
 COPY run.sh /
 RUN chmod 755 /run.sh
 CMD ["/run.sh"]

@@ -5,3 +5,5 @@ modules:
     var.input.udp.port: 2055
     var.elasticsearch.hosts: "elasticsearch:9200"
     var.kibana.host: "kibana:5601"
+    var.elasticsearch.ssl.enabled: false
+    var.kibana.ssl.enabled: false

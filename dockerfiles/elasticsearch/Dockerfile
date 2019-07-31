@@ -12,11 +12,11 @@ RUN yum install elasticsearch -y
 RUN yum install -y initscripts
 
 # install plugin
-RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-geoip --batch
-RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-user-agent --batch
+# install plugin
+# The geoip processor is no longer distributed as a plugin, but is now a module
+# distributed by default with Elasticsearch. See the GeoIP processor for more details
+# https://www.elastic.co/guide/en/elasticsearch/plugins/current/ingest-geoip.html
 ## RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install x-pack --batch
-## COPY elasticsearch.yml /etc/elasticsearch/
-COPY filebeat.template.json /
 
 COPY run.sh /
 RUN chmod 755 /run.sh

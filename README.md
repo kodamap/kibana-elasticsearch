@@ -4,9 +4,9 @@
 
 components | description
 ----- | -----
-Elasticsearch | search engine
-Kibana | dashboard
-Logstash | netflow collector
+Elasticsearch (v7.2.1) | search engine
+Kibana (v7.2.1) | dashboard
+Logstash (v7.2.1) | netflow collector
 Nginx (optional) | reverse proxy (restricting access with HTTP Basic Authentication on kibana) * id/pass: elastic/changeme
 
 * tested version
@@ -75,6 +75,53 @@ chmod 777 -R /var/data/logstash
 chmod 777 -R /var/data/kibana
 ```
 
+## Configure
+
+* kibana (kibana-elasticsearch/dockerfiles/kibana/kibana.yml)
+
+```sh
+server.host: "0.0.0.0"
+elasticsearch.url: "http://elasticsearch:9200"
+```
+
+* elasticsearch (kibana-elasticsearch/dockerfiles/elasticsearch/elasticsearch.yml)
+
+set the container_name to `discovery.seed_hosts` and `cluster.initial_master_nodes`
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-settings.html
+
+
+```sh
+network.host: 0.0.0.0
+discovery.seed_hosts: elasticsearch
+cluster.initial_master_nodes: elasticsearch
+xpack.ml.enabled: false
+``` 
+
+* logstash (kibana-elasticsearch/dockerfiles/logstash/logstash.yml)
+
+```sh
+path.data: /var/lib/logstash
+path.logs: /var/log/logstash
+modules:
+  - name: netflow
+    var.input.udp.port: 2055
+    var.elasticsearch.hosts: "elasticsearch:9200"
+    var.kibana.host: "kibana:5601"
+    var.elasticsearch.ssl.enabled: false
+    var.kibana.ssl.enabled: false
+```
+
+* Locate the files to shared volume
+
+```sh
+cp kibana-elasticsearch/dockerfiles/kibana/kibana.yml /var/data/kibana/
+cp kibana-elasticsearch/dockerfiles/elasticsearch/elasticsearch.yml /var/data/elasticsearch/
+cp kibana-elasticsearch/dockerfiles/logstash/logstash.yml /var/data/logstash/
+```
+
+
+
 ## build and run
 
 * Install docker-compose
@@ -101,7 +148,7 @@ nginx           /run.sh   Up      0.0.0.0:5681->5681/tcp
 
 * You will see kibana dashboard  
 
-URL : http://{your ip address}:5601/
+URL: http://{your ip address}:5601/
 
 
 ## enable logstash netflow module
@@ -113,7 +160,7 @@ URL : http://{your ip address}:5601/
 
 LS_LOG=/var/log/logstash/logstash-plain.log
 su - logstash -s /bin/bash -c \
-    "export JAVA_HOME=/etc/alternatives/jre_openjdk;export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin;/usr/share/logstash/bin/logstash --setup -M netflow.var.input.udp.port=2055 --path.settings /etc/logstash" &
+    "export JAVA_HOME=/etc/alternatives/jre_openjdk;export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin;/usr/share/logstash/bin/logstash --path.settings /etc/logstash" &
 su - logstash -s /bin/bash -c \
     "test -e ${LS_LOG} || touch ${LS_LOG}"
 tail -f ${LS_LOG}
