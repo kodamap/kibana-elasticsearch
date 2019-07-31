@@ -1,17 +1,14 @@
 # Netflow Visualization with ELK stack
 
-## Components
+## Environment
 
 components | description
 ----- | -----
-Elasticsearch (v7.2.1) | search engine
-Kibana (v7.2.1) | dashboard
-Logstash (v7.2.1) | netflow collector
+Elasticsearch ( v7.2.1 ) | search engine
+Kibana ( v7.2.1 ) | dashboard
+Logstash ( v7.2.1 ) | netflow collector
 Nginx (optional) | reverse proxy (restricting access with HTTP Basic Authentication on kibana) * id/pass: elastic/changeme
 
-* tested version
-
-Kibana / Elasticsearch : 6.3.1 and 6.5.1 , Logstash : 6.3.1
 
 ## Netflow visualization 
 
@@ -112,7 +109,7 @@ modules:
     var.kibana.ssl.enabled: false
 ```
 
-* Locate the files to shared volume
+* Copy the files to shared volume
 
 ```sh
 cp kibana-elasticsearch/dockerfiles/kibana/kibana.yml /var/data/kibana/
@@ -160,7 +157,7 @@ URL: http://{your ip address}:5601/
 
 LS_LOG=/var/log/logstash/logstash-plain.log
 su - logstash -s /bin/bash -c \
-    "export JAVA_HOME=/etc/alternatives/jre_openjdk;export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin;/usr/share/logstash/bin/logstash --path.settings /etc/logstash" &
+    "export JAVA_HOME=/etc/alternatives/jre_openjdk;export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin;/usr/share/logstash/bin/logstash --setup -M netflow.var.input.udp.port=2055 --path.settings /etc/logstash" &
 su - logstash -s /bin/bash -c \
     "test -e ${LS_LOG} || touch ${LS_LOG}"
 tail -f ${LS_LOG}
@@ -234,11 +231,11 @@ Re-type new password:
 cp -p nginx/.htpasswd /var/data/nginx/
 ```
 
-## Misc
+## Misc (netflow sample configuration)
 
-netflow sample configuration on vyos
+* vyos
 
-* change [logstash ip address ]on your environment.
+change [logstash ip address ].
 
 ```sh
 set system flow-accounting interface 'eth0'
@@ -247,6 +244,23 @@ set system flow-accounting netflow engine-id '100'
 set system flow-accounting netflow server [logstash ip address] port '2055'
 set system flow-accounting netflow version '9'
 ```
+
+* Cisco IOS ( tested with IOS 15.5)
+
+https://www.cisco.com/c/ja_jp/td/docs/cian/ios/ios15-2m-t/cg/001/nf-15-2mt/cfg-nflow-data-expt.html 
+ 
+change [interface name] and [logstash ip address].
+
+```sh
+interface [interface name]
+ ip flow ingress
+
+ip flow-export source [interface name]
+ip flow-export version 9
+ip flow-export interface-names
+ip flow-export destination [logstash ip address] 2055
+```
+
 
 
 ## Reference
@@ -267,7 +281,6 @@ https://www.elastic.co/guide/en/kibana/current/rpm.html
 * beats
 
 https://www.elastic.co/guide/en/beats/libbeat/current/installing-beats.html
-
 
 * Logstash Netflow Module
 https://www.elastic.co/guide/en/logstash/current/netflow-module.html
