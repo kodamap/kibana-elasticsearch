@@ -238,6 +238,12 @@ server.basePath: "/kibana"
 server.rewriteBasePath: true
 ```
 
+modify logstash.yml
+
+```sh
+var.kibana.host: "kibana:5601/kibana"
+```
+
 copy the default.conf to the volume.
 
 ```sh
