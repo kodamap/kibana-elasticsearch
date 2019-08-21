@@ -83,7 +83,7 @@ elasticsearch.url: "http://elasticsearch:9200"
 
 * elasticsearch (kibana-elasticsearch/dockerfiles/elasticsearch/elasticsearch.yml)
 
-set the container_name to `discovery.seed_hosts` and `cluster.initial_master_nodes`
+set `discovery.seed_hosts` and `discovery_type`
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-settings.html
 
@@ -91,7 +91,7 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discover
 ```sh
 network.host: 0.0.0.0
 discovery.seed_hosts: elasticsearch
-cluster.initial_master_nodes: elasticsearch
+discovery.type: single-node
 xpack.ml.enabled: false
 ``` 
 
@@ -180,6 +180,8 @@ modules:
 You can easily deploy https reverse proxy with nginx when you acesss to kibana via internet access.
 ssl certificates need to be stored in /var/data/nginx.
 
+https://discuss.elastic.co/t/nginx-reverse-proxy-setup-for-kibana/167327
+
 modify docker-compose.yml and default.conf
 
 * docker-compose.yml
@@ -209,14 +211,37 @@ Modify "ssl_certificate" in the default.conf when you use other ssl certificates
 Comment out self-signed certificates and enable certificates you want to.
 Store authorized certificate /var/data/nginx/.
 
+This example adds sub-uri `kibana`.
+
 ```sh
 server {
-    listen 5681 ssl;
+    listen 443 ssl;
 
     ssl_certificate /etc/nginx/conf.d/fullchain.pem;
     ssl_certificate_key /etc/nginx/conf.d/privkey1.pem;
     #ssl_certificate /etc/nginx/conf.d/server.crt;
     #ssl_certificate_key /etc/nginx/conf.d/server.key;
+  
+    location /kibana/ {
+        ..
+        proxy_pass http://kibana:5601/kibana/;
+        ..
+    }
+}
+```
+
+Your also need to modify kibana.yml. (`server.basePath` and `server.rewriteBasePath`)
+
+```sh
+..
+server.basePath: "/kibana"
+server.rewriteBasePath: true
+```
+
+copy the default.conf to the volume.
+
+```sh
+cp -p nginx/default.conf /var/data/nginx/
 ```
 
 change base auth password (default: elastic/changeme)
