@@ -43,8 +43,7 @@ ElastiFlow ( v3.5.1 ) | netflow plugin
 
 <a href="https://raw.githubusercontent.com/wiki/kodamap/kibana-elasticsearch/images/elastiflow_dashboard_73x.png
 ">
-<img src="https://raw.githubusercontent.com/wiki/kodamap/kibana-elasticsearch/images/elastiflow_dashboard_73x.png
-" alt="elastiflow_dashboard_73x" style="width:75%;height:auto;" ></a>
+<img src="https://raw.githubusercontent.com/wiki/kodamap/kibana-elasticsearch/images/elastiflow_dashboard_73x.png" alt="elastiflow_dashboard_73x" style="width:75%;height:auto;" ></a>
 
 ## 3.1. Install docker on CentOS7 with ansible
 
