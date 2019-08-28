@@ -40,26 +40,11 @@ services:
     volumes:
       - "/var/data/logstash/logstash.yml:/etc/logstash/logstash.yml:ro"
       - "/var/data/logstash:/var/lib/logstash"
+      - "/var/data/logstash/jvm.options:/etc/logstash/jvm.options:ro"
+      - "/var/data/logstash/elastiflow:/etc/logstash/elastiflow"
+      - "/var/data/logstash/pipelines.yml:/etc/logstash/pipelines.yml:ro"
     ports:
       - "2055:2055/udp"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10240k"
-        max-file: "10"
-    restart: unless-stopped
-  nginx:
-    build: ./nginx
-    container_name: nginx
-    links:
-      - kibana
-    volumes:
-      - "/var/data/nginx/.htpasswd:/etc/nginx/conf.d/.htpasswd:ro"
-      #- "/var/data/nginx/privkey.pem:/etc/nginx/conf.d/privkey.pem:ro"
-      #- "/var/data/nginx/fullchain.pem:/etc/nginx/conf.d/fullchain.pem:ro"
-      - "/var/data/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro"
-    ports:
-      - "443:443"
     logging:
       driver: "json-file"
       options:

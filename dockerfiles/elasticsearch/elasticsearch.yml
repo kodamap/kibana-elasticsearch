@@ -2,3 +2,7 @@ network.host: 0.0.0.0
 discovery.seed_hosts: elasticsearch
 discovery.type: single-node
 xpack.ml.enabled: false
+
+# Elasticsearch 7.x, require that the following settings be made in elasticsearch.yml
+indices.query.bool.max_clause_count: 8192
+search.max_buckets: 100000

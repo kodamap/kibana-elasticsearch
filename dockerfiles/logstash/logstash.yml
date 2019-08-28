@@ -1,9 +1,9 @@
 path.data: /var/lib/logstash
 path.logs: /var/log/logstash
-modules:
-  - name: netflow
-    var.input.udp.port: 2055
-    var.elasticsearch.hosts: "elasticsearch:9200"
-    var.kibana.host: "kibana:5601"
-    var.elasticsearch.ssl.enabled: false
-    var.kibana.ssl.enabled: false
+#modules:
+#  - name: netflow
+#    var.input.udp.port: 2055
+#    var.elasticsearch.hosts: "elasticsearch:9200"
+#    var.kibana.host: "kibana:5601/kibana"
+#    var.elasticsearch.ssl.enabled: false
+#    var.kibana.ssl.enabled: false
