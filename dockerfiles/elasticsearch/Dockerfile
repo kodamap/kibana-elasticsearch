@@ -8,7 +8,7 @@ ENV PATH $PATH:$HOME/bin:$JAVE_HOME/bin
 
 RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 COPY elasticsearch.repo /etc/yum.repos.d/
-RUN yum install elasticsearch -y
+RUN yum install elasticsearch-7.3.2 -y
 RUN yum install -y initscripts
 
 COPY run.sh /

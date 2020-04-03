@@ -31,10 +31,10 @@ Tested Enviroment(This example uses custom docker image (**Not official image**)
 
 components | description
 ----- | -----
-Elasticsearch ( v7.3.1 ) | search engine
-Kibana ( v7.3.1 ) | dashboard
-Logstash ( v7.3.1 ) | netflow collector
-ElastiFlow ( v3.5.1 ) | netflow plugin
+Elasticsearch ( v7.3.2 ) | search engine
+Kibana ( v7.3.2 ) | dashboard
+Logstash ( v7.3.2 ) | netflow collector
+ElastiFlow ( v3.5.3 ) | netflow plugin
 
 
 # 3. Netflow visualization 

@@ -8,7 +8,7 @@ ENV PATH $PATH:$HOME/bin:$JAVA_HOME/bin
 
 RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 COPY kibana.repo /etc/yum.repos.d/
-RUN yum install kibana -y
+RUN yum install kibana-7.3.2 -y
 
 COPY run.sh /
 RUN chmod 755 /run.sh

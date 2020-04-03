@@ -8,7 +8,7 @@ ENV PATH $PATH:$HOME/bin:$JAVA_HOME/bin
 
 RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 COPY logstash.repo /etc/yum.repos.d/
-RUN yum install logstash -y
+RUN yum install logstash-7.3.2 -y
 
 # Add and Update Required Logstash plugins for ElastiFlow
 RUN /usr/share/logstash/bin/logstash-plugin install logstash-codec-sflow
